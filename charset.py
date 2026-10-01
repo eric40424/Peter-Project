@@ -1,0 +1,2 @@
+# 車牌字元集：台灣車牌不使用 I、O（避免與 1、0 混淆）
+CHARS = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ-"
