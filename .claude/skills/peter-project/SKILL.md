@@ -1,6 +1,6 @@
 ---
 name: peter-project
-description: 操作與修改這個車牌辨識專案（Peter-Project：合成資料 → CRNN+CTC 訓練 → Flask 網站 → 教學 PDF）。在這個專案裡執行、開網站、產生資料集、訓練模型、改程式、重產教學 PDF、裝套件或 commit/push 之前先讀這份。
+description: 操作與修改這個車牌辨識專案（Peter-Project：合成資料 → CRNN+CTC 訓練 → Flask 網站 → 教學 PDF）。在這個專案裡執行、開網站、產生資料集、訓練模型、改程式、重產教學 PDF、解釋程式碼概念、裝套件或 commit/push 之前先讀這份。
 ---
 
 # Peter-Project 車牌辨識：操作手冊
@@ -38,6 +38,7 @@ python docs/build_pdf.py [--run <run 名稱>]  # 重產 docs/車牌辨識專案�
 - `app.py`：辨識 / 模型管理 / `/api/progress` / 用 `subprocess` 跑背景工作，輸出寫進 `logs/job.log`。
 - `static/app.js`：每 2 秒輪詢 `/api/jobs` 與 `/api/progress`，每 10 秒更新曲線。
 - `docs/build_pdf.py`：程式碼片段直接從原始檔擷取，改了程式後重跑就會更新。
+- `docs/學習筆記.txt` / `.pdf`：使用者問過的概念整理（CRNN、`super().__init__()`、tensor 形狀、LSTM 與 CTC blank、PyTorch 訓練流程、app.py 與前端、`@app.route`、decorator）。新的解釋可以補成新章節。PDF 是從 txt 轉出來的，轉換腳本**不在 repo 裡**；txt 改了要重新產生 PDF 時，需要重寫轉換程式（縮排區塊用等寬格線排，中文佔 2 格，才能保留 txt 的對齊）。
 - `.gitignore` 排除 `dataset/`、`models/`、`logs/`：模型與資料只在本機。
 
 ## 測試改動時：不要弄髒使用者的 models/
@@ -64,7 +65,15 @@ python train.py --data <暫存>/ds --out <暫存>/models --epochs 2 --batch 32
 
 - 預設分支 `main`，遠端 `https://github.com/eric40424/Peter-Project.git`。
 - 改動先開分支 → commit → `git push -u origin <分支>` → 用瀏覽器打開 `https://github.com/eric40424/Peter-Project/pull/new/<分支>` 讓使用者建立並合併 PR → 合併後 `git checkout main && git pull --ff-only`，刪掉本機分支。
+- 例外：更新這份 skill、`docs/` 裡的筆記這類小改動，使用者要求過直接推 `main`。程式碼改動仍走分支 + PR；不確定時先問。
 - commit 訊息用繁體中文（第一行摘要 + 條列說明）。
+
+## 回答使用者的方式
+
+- **使用者常常看不到終端機裡的長回答。** 解釋概念、說明程式碼時，除了在對話中簡短摘要，也把完整內容寫成 UTF-8 txt（存在桌面 `C:\Users\joie\Desktop\`，不要放進專案以免弄髒 git），再用 `Start-Process notepad.exe -ArgumentList '"<路徑>"'` 打開。使用者說「解釋就好」時，就只在對話中回答，不要另外產生檔案或跑程式。
+- 解釋時用專案裡的真實程式碼和**實際執行的結果**當例子（例如用訓練好的模型印出 32 個時間步的輸出、實際印出 tensor 形狀），不要編造數字。示範只在記憶體裡跑，不寫入 `models/`。
+- 使用者要求「先停止」時立刻停下，並說明有沒有東西還在跑、有沒有改到檔案。
+- 桌面上有使用者自己的私人檔案，只讀寫自己產生的說明檔，其他檔案不要碰。
 
 ## 寫作慣例
 
